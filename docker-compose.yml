@@ -27,3 +27,22 @@ services:
       CONCOURSE_MAIN_TEAM_LOCAL_USER: test
       CONCOURSE_PROMETHEUS_BIND_IP: 172.19.0.3
       CONCOURSE_PROMETHEUS_BIND_PORT: 8081
+
+  pushgateway:
+    image: prom/pushgateway
+    privileged: true
+    depends_on: [concourse]
+    ports:
+      - "9091:9091"
+      
+  prometheus:
+    build: prometheus/.
+    privileged: true
+    depends_on: [pushgateway]
+    ports:
+      - "9090:9090"
+
+  # statsd:
+  #   image: statsd/statsd
+  #   ports:
+  #     - "8125:8125"
